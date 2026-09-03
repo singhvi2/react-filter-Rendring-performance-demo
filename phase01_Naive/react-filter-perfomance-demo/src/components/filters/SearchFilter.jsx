@@ -9,7 +9,7 @@ function SearchFilter({
       onChange={(e) =>
         setSearch(e.target.value)
       }
-      placeholder="Search products..."
+      placeholder="Search products Name ..."
       className="
         w-full
         rounded-lg

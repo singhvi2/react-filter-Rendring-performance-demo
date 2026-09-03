@@ -5,30 +5,44 @@ import Staticstics from "../components/Statistics.jsx";
 import { useEffect, useRef, useState } from "react";
 import SearchFilter from "../components/filters/SearchFilter.jsx";
 
-const products = generateProducts(100);
+const products = generateProducts(10000);
 function NaiveEffectDerivedFilter() {
   const renderCount = useRef(0);
   const filterCount = useRef(0);
-  filterCount.current++;
-  renderCount.current++;
-
+  const filterTime = useRef(0);
   const [lists, setList] = useState(products);
   const [search, setSearch] = useState("");
   const [filteredProducts, setfilteredProducts] = useState([]);
 
+  renderCount.current++;
+  const start = performance.now();
+
   useEffect(() => {
-    setfilteredProducts(
-      lists.filter((list) =>
-        list.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-      ),
+    const start = performance.now();
+    filterCount.current++;
+    const result = lists.filter((list) =>
+      list.name.toLowerCase().includes(search.toLowerCase()),
     );
+    const end = performance.now();
+    filterTime.current = end - start;
+    setfilteredProducts(result);
+
+    // setfilteredProducts(
+    //   lists.filter((list) =>
+    //     list.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+    //   ),
+    // );
   }, [lists, search]);
+
   // const filteredProducts = filterProducts(products, {
   //   search,
   //   category: "",
   //   brand: "",
   //   price: 5000,
   // });
+
+  const end = performance.now();
+  filterTime.current = end - start;
 
   return (
     <div>
@@ -40,6 +54,7 @@ function NaiveEffectDerivedFilter() {
       <Staticstics
         renderCount={renderCount.current}
         filterCount={filterCount.current}
+        filterTime={filterTime.current}
         totalProducts={lists.length}
         filteredProducts={filteredProducts.length}
       />

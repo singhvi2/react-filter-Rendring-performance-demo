@@ -2,7 +2,7 @@
  * Description placeholder
  *
  * @param {*} products : list of all product
- * @param {*} filters :{search :  product.name, category : product.category,brand : .. , price:}
+ * @param {*} filters :{(search :  product.name), category : product.category,brand : .. , price:}
  * @returns {*}
  */
 export const filterProducts = (products, filters) => {
@@ -11,13 +11,14 @@ export const filterProducts = (products, filters) => {
       .toLowerCase()
       .includes(filters.search.toLowerCase());
 
-    const categoryMatch =
-      !filters.category || product.category === filters.category;
+    // const categoryMatch =
+    //   !filters.category || product.category === filters.category;
 
-    const brandMatch = !filters.brand || product.brand === filters.brand;
+    // const brandMatch = !filters.brand || product.brand === filters.brand;
 
-    const priceMatch = product.price <= filters.price;
+    // const priceMatch = product.price <= filters.price;
 
-    return searchMatch && categoryMatch && brandMatch && priceMatch;
+    // return searchMatch && categoryMatch && brandMatch && priceMatch;
+    return searchMatch;
   });
 };

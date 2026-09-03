@@ -3,6 +3,7 @@ import StatCard from "./StatCard";
 function Statistics({
   renderCount,
   filterCount,
+  filterTime,
   totalProducts,
   filteredProducts,
 }) {
@@ -11,6 +12,8 @@ function Statistics({
       <StatCard title="Render Count" value={renderCount} />
 
       <StatCard title="Filter Count" value={filterCount} />
+
+      <StatCard title="Filter Time" value={filterTime} />
 
       <StatCard title="Total Products" value={totalProducts} />
 

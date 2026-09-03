@@ -5,21 +5,25 @@ import Staticstics from "../components/Statistics.jsx";
 import { useRef, useState } from "react";
 import SearchFilter from "../components/filters/SearchFilter.jsx";
 
-const products = generateProducts(100);
+const products = generateProducts(10000);
 function NaiveFilter() {
   const renderCount = useRef(0);
   const filterCount = useRef(0);
-  filterCount.current++;
-  renderCount.current++;
-
+  const filterTime = useRef(0);
   const [search, setSearch] = useState("");
+
+  renderCount.current++;
+  const start = performance.now();
+  filterCount.current++;
 
   const filteredProducts = filterProducts(products, {
     search,
-    category: "",
-    brand: "",
-    price: 5000,
+    // category: "",
+    // brand: "",
+    // price: 5000,
   });
+  const end = performance.now();
+  filterTime.current = end - start;
 
   return (
     <div>
@@ -31,6 +35,7 @@ function NaiveFilter() {
       <Staticstics
         renderCount={renderCount.current}
         filterCount={filterCount.current}
+        filterTime={filterTime.current}
         totalProducts={products.length}
         filteredProducts={filteredProducts.length}
       />
@@ -38,7 +43,7 @@ function NaiveFilter() {
         <SearchFilter search={search} setSearch={setSearch} />
       </div>
 
-      <ProductList products={filteredProducts.slice(0, 50)} />
+      <ProductList products={filteredProducts} />
     </div>
   );
 }
