@@ -412,22 +412,39 @@ Category and brand filtering will be added in later experiments.
 
 Example format:
 
-| Action                | Parent Renders | Filter Executions |       Filter Time |
-| --------------------- | -------------: | ----------------: | ----------------: |
-| Initial Load          |             01 |                01 | 2.300000000745058 |
-| Type first character  |       01 -> 02 |          01 -> 02 | 0.900000000372529 |
-| Type second character |       02 -> 03 |          02 -> 03 |               1.5 |
+| Action                | Parent Renders | Filter Executions | Filter Time |
+| --------------------- | -------------: | ----------------: | ----------: |
+| Initial Load          |             01 |                01 |           1 |
+| Type first character  |       01 -> 02 |          01 -> 02 |         1.4 |
+| Type second character |       02 -> 03 |          02 -> 03 |         0.7 |
+
+## table for React Profiler:
+
+| Action / Commit | Component   | Render Duration |
+| --------------- | ----------- | --------------: |
+| Initial Load    | NaiveFilter |         ~1.4 ms |
+| Initial Load    | ProductList |         ~196 ms |
+| Search update   | NaiveFilter |         ~1.8 ms |
+| Search update   | ProductList |         ~242 ms |
 
 # 📈 Baseline Results : NaiveEffectFilter
 
 The results below are measured from the actual application.
 
-
 | Action                | Parent Renders | Filter Executions | Filter Time |
 | --------------------- | -------------: | ----------------: | ----------: |
-| Initial Load          |              — |                 — |           — |
-| Type first character  |              — |                 — |           — |
-| Type second character |              — |                 — |           — |
+| Initial Load          |              2 |                 1 |      0.6 ms |
+| Type first character  |              4 |                 2 |      1.3 ms |
+| Type second character |              6 |                 3 |      0.5 ms |
+
+| Implementation             | User Action    | Render Count | Filter Count | Commit Duration |         Component Cost | Update Caused By           | Main Observation                                           |
+| -------------------------- | -------------- | -----------: | -----------: | --------------: | ---------------------: | -------------------------- | ---------------------------------------------------------- |
+| `NaiveFilter`              | Initial render |            1 |            0 |      ~1290 ms\* |  `ProductList` ~196 ms | `RouterProvider`           | Large product list is expensive to render                  |
+| `NaiveFilter`              | Type `P`       |            2 |            1 |      ~1168 ms\* |  `ProductList` ~242 ms | `NaiveFilter`              | Every keystroke triggers filtering + ProductList rendering |
+| `NaiveFilter`              | Type `Pr`      |            3 |            2 |      ~1284 ms\* |  `ProductList` ~196 ms | `NaiveFilter`              | Filtering runs again for every input update                |
+| `NaiveEffectDerivedFilter` | Type `P`       |            2 |            1 |        ~18.9 ms | `ProductList` ~17.8 ms | `NaiveEffectDerivedFilter` | Derived filtered state introduces an additional update     |
+| `NaiveEffectDerivedFilter` | Type `Pr`      |            4 |            2 |        ~15.1 ms | `ProductList` ~12.2 ms | `NaiveEffectDerivedFilter` | Input update → effect → state update → another render      |
+| `NaiveEffectDerivedFilter` | Later update   |            6 |            3 |        ~10.3 ms |  `ProductList` ~9.5 ms | `NaiveEffectDerivedFilter` | Extra effect-driven render is visible                      |
 
 ### Measurements
 

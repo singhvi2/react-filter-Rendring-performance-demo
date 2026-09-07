@@ -10,12 +10,13 @@ function NaiveEffectDerivedFilter() {
   const renderCount = useRef(0);
   const filterCount = useRef(0);
   const filterTime = useRef(0);
+
   const [lists, setList] = useState(products);
   const [search, setSearch] = useState("");
   const [filteredProducts, setfilteredProducts] = useState([]);
 
   renderCount.current++;
-  const start = performance.now();
+ 
 
   useEffect(() => {
     const start = performance.now();
@@ -40,9 +41,6 @@ function NaiveEffectDerivedFilter() {
   //   brand: "",
   //   price: 5000,
   // });
-
-  const end = performance.now();
-  filterTime.current = end - start;
 
   return (
     <div>
